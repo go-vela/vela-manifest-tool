@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 package main
 
 import (
@@ -15,6 +17,7 @@ func TestVersionCompatible(t *testing.T) {
 
 func TestVersionSemver(t *testing.T) {
 	version.Tag = "abcd"
+
 	v := version.New()
 	if v != nil {
 		t.Errorf("version.New should return nil if a non-semver Tag (%q) is provided", version.Tag)

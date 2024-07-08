@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 package main
 
 import (
@@ -19,11 +21,14 @@ func TestManifestSpec_New_Validate(t *testing.T) {
 		man.Manifests[0].Image)
 	assertImageMatch(t, "index.docker.io/octocat/hello-world:latest-linux-arm64-v8",
 		man.Manifests[1].Image)
+
 	var data bytes.Buffer
+
 	err := man.Render(&data)
 	if err != nil {
 		t.Errorf("Error encountered during render: %v", err)
 	}
+
 	expected := "image: index.docker.io/octocat/hello-world:latest\n" +
 		"manifests:\n" +
 		"- image: index.docker.io/octocat/hello-world:latest-linux-amd64\n" +
@@ -143,6 +148,7 @@ func firstMS(ms []*ManifestSpec, _ error) *ManifestSpec {
 	if len(ms) > 0 {
 		return ms[0]
 	}
+
 	return nil
 }
 
@@ -170,13 +176,15 @@ func defaultFixture(t *testing.T) *ManifestSpec {
 	if err != nil {
 		t.Fatalf("error encountered: %v", err)
 	}
+
 	if len(ms) != 1 {
 		t.Fatalf("should only have returned a single manifest spec")
 	}
+
 	return ms[0]
 }
 
-// Translate ManifestSpec
+// Translate ManifestSpec.
 func trMS(t *testing.T, f func(*ManifestSpec) *ManifestSpec) *ManifestSpec {
 	return f(defaultFixture(t))
 }

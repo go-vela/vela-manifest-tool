@@ -35,9 +35,8 @@ type Plugin struct {
 	manifestSpecs []*ManifestSpec // Parsed specs, populated as side effect of validate
 }
 
-// Command formats and outputs the command necessary for
-// manifest-tool to build and publish a Docker Manifest List or
-// OCI Image Index
+// Formats and outputs the command necessary for manifest-tool to build
+// and publish a Docker Manifest List or OCI Image Index.
 func (p *Plugin) Command(specFile string) *exec.Cmd {
 	logrus.Debug("creating manifest-tool command from plugin configuration")
 
@@ -75,17 +74,21 @@ func (p *Plugin) Exec() error {
 	if err != nil {
 		return err
 	}
+
 	a := &afero.Afero{
 		Fs: appFS,
 	}
+
 	err = a.Mkdir("/root/specs", 0755)
 	if err != nil {
 		return err
 	}
 
 	for i, spec := range manifestSpecs {
-		fmt.Printf("Processing manifest list/image index %s\n", spec.Image)
 		var data bytes.Buffer
+
+		fmt.Printf("Processing manifest list/image index %s\n", spec.Image)
+
 		err = spec.Render(&data)
 		if err != nil {
 			return err
@@ -93,7 +96,12 @@ func (p *Plugin) Exec() error {
 
 		fmt.Printf("Rendered spec file:\n%s\n", data.String())
 		specFilename := fmt.Sprintf("/root/specs/spec_%d.yml", i)
-		a.WriteFile(specFilename, data.Bytes(), 0644)
+
+		err = a.WriteFile(specFilename, data.Bytes(), 0644)
+		if err != nil {
+			return err
+		}
+
 		cmd := p.Command(specFilename)
 		// If a dry run, return without executing the cmd
 		if p.Registry.DryRun {
@@ -139,6 +147,7 @@ func (p *Plugin) Validate() error {
 	if err != nil {
 		return err
 	}
+
 	p.manifestSpecs = manifestSpecs
 
 	return nil

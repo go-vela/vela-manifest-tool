@@ -14,12 +14,11 @@ import (
 
 const manifestToolBin = "/manifest-tool"
 
-// private variables just for test mocking
+// Private variables just for test mocking.
 var stdout io.Writer = os.Stdout
 var stderr io.Writer = os.Stderr
 
-// execCmd is a helper function to
-// run the provided command.
+// execCmd is a helper function to run the provided command.
 func execCmd(e *exec.Cmd) error {
 	logrus.Tracef("executing cmd %s", strings.Join(e.Args, " "))
 

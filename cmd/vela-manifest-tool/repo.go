@@ -9,7 +9,7 @@ import (
 )
 
 type (
-	// Repo represents the plugin configuration for repo information
+	// Repo represents the plugin configuration for repo information.
 	Repo struct {
 		Name              string   // name of the repository for the image
 		Tags              []string // tags of the image for the repository

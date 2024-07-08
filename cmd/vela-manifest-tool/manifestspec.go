@@ -27,7 +27,7 @@ type Manifest struct {
 	Template *template.Template
 }
 
-// ManifestSpec represents the structure of the manifest-tool yaml spec file
+// ManifestSpec represents the structure of the manifest-tool yaml spec file.
 type ManifestSpec struct {
 	Image     string              // name of the image index including tag
 	Manifests []ManifestComponent // list of component images to include in index
@@ -55,6 +55,7 @@ type ComponentContext struct {
 func NewManifestSpec(reg *Registry, repo *Repo) ([]*ManifestSpec, error) {
 	specs := []*ManifestSpec{}
 	tmpl, err := template.New("component_template").Parse(repo.ComponentTemplate)
+
 	if err != nil {
 		return specs, err
 	}
@@ -62,14 +63,17 @@ func NewManifestSpec(reg *Registry, repo *Repo) ([]*ManifestSpec, error) {
 	if len(reg.Name) == 0 {
 		return specs, fmt.Errorf("no registry name provided")
 	}
+
 	if len(repo.Name) == 0 {
 		return specs, fmt.Errorf("no repository name provided")
 	}
+
 	for _, tag := range repo.Tags {
 		ms := ManifestSpec{
 			Image:     reg.Name + repo.Name + ":" + tag,
 			Manifests: []ManifestComponent{},
 		}
+
 		for _, platform := range repo.Platforms {
 			platformComp := strings.Split(platform, "/")
 			if len(platformComp) < 2 {
@@ -79,6 +83,7 @@ func NewManifestSpec(reg *Registry, repo *Repo) ([]*ManifestSpec, error) {
 				// else to make the variant below clean
 				platformComp = append(platformComp, "")
 			}
+
 			ctx := ComponentContext{
 				Repo:    repo.Name,
 				Tag:     tag,
@@ -86,11 +91,14 @@ func NewManifestSpec(reg *Registry, repo *Repo) ([]*ManifestSpec, error) {
 				Arch:    platformComp[1],
 				Variant: platformComp[2],
 			}
+
 			var compImgBuf bytes.Buffer
 			err = tmpl.Execute(&compImgBuf, ctx)
+
 			if err != nil {
 				return specs, err
 			}
+
 			compImg := compImgBuf.String()
 			comp := ManifestComponent{
 				Image: fmt.Sprintf("%s%s", reg.Name, compImg),
@@ -102,8 +110,10 @@ func NewManifestSpec(reg *Registry, repo *Repo) ([]*ManifestSpec, error) {
 			}
 			ms.Manifests = append(ms.Manifests, comp)
 		}
+
 		specs = append(specs, &ms)
 	}
+
 	return specs, nil
 }
 
@@ -141,7 +151,9 @@ func (ms *ManifestSpec) Render(wr io.Writer) error {
 	if err != nil {
 		return err
 	}
+
 	_, err = wr.Write(yamlData)
+
 	return err
 }
 
@@ -151,8 +163,10 @@ func validateTagOfImage(fullImage string) error {
 	if len(topLevelImgParts) != 2 {
 		return fmt.Errorf("%s not in image:tag format", fullImage)
 	}
+
 	if !tagRegexp.MatchString(topLevelImgParts[1]) {
 		return fmt.Errorf(errTagValidation, topLevelImgParts[1])
 	}
+
 	return nil
 }

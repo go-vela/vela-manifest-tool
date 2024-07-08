@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 package main
 
 import (
@@ -83,7 +85,7 @@ func makeDefaultPlugin() *Plugin {
 	}
 }
 
-// Translate Plugin
+// Translate Plugin.
 func trP(t func(*Plugin) *Plugin) *Plugin {
 	return t(makeDefaultPlugin())
 }
