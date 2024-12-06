@@ -4,7 +4,7 @@
 ##    docker build --no-cache --target certs -t vela-manifest-tool:certs .    ##
 ################################################################################
 
-FROM alpine:3.20.2@sha256:0a4eaa0eecf5f8c050e5bba433f58c052be7587ee8af3e8b3910ef9ab5fbe9f5 as certs
+FROM alpine:3.21.0@sha256:21dc6063fd678b478f57c0e13f47560d0ea4eeba26dfc947b2a4f81f686b9f45 as certs
 
 RUN apk add --update --no-cache ca-certificates
 
