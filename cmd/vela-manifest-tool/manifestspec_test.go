@@ -31,15 +31,16 @@ func TestManifestSpec_New_Validate(t *testing.T) {
 
 	expected := "image: index.docker.io/octocat/hello-world:latest\n" +
 		"manifests:\n" +
-		"- image: index.docker.io/octocat/hello-world:latest-linux-amd64\n" +
-		"  platform:\n" +
-		"    os: linux\n" +
-		"    architecture: amd64\n" +
-		"- image: index.docker.io/octocat/hello-world:latest-linux-arm64-v8\n" +
-		"  platform:\n" +
-		"    os: linux\n" +
-		"    architecture: arm64\n" +
-		"    variant: v8\n"
+		"    - image: index.docker.io/octocat/hello-world:latest-linux-amd64\n" +
+		"      platform:\n" +
+		"        os: linux\n" +
+		"        architecture: amd64\n" +
+		"    - image: index.docker.io/octocat/hello-world:latest-linux-arm64-v8\n" +
+		"      platform:\n" +
+		"        os: linux\n" +
+		"        architecture: arm64\n" +
+		"        variant: v8\n"
+	
 	if data.String() != expected {
 		t.Errorf("failed yaml rendering.\nexpected:\n%sactual:\n%s", expected, data.String())
 	}
