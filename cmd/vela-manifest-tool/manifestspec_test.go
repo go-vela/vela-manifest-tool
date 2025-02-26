@@ -40,7 +40,7 @@ func TestManifestSpec_New_Validate(t *testing.T) {
 		"        os: linux\n" +
 		"        architecture: arm64\n" +
 		"        variant: v8\n"
-	
+
 	if data.String() != expected {
 		t.Errorf("failed yaml rendering.\nexpected:\n%sactual:\n%s", expected, data.String())
 	}
