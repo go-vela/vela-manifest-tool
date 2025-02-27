@@ -9,9 +9,8 @@ import (
 	"os/exec"
 	"regexp"
 
-	"github.com/spf13/afero"
-
 	"github.com/sirupsen/logrus"
+	"github.com/spf13/afero"
 )
 
 var (
