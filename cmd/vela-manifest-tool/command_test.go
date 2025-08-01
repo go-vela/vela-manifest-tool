@@ -10,7 +10,7 @@ import (
 )
 
 func TestVersion(t *testing.T) {
-	cmd := versionCmd()
+	cmd := versionCmd(t.Context())
 	cases := []struct {
 		arg, expected string
 	}{
