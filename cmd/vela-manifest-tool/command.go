@@ -3,6 +3,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"os"
@@ -35,7 +36,7 @@ func execCmd(e *exec.Cmd) error {
 
 // versionCmd is a helper function to output
 // the client version information.
-func versionCmd() *exec.Cmd {
+func versionCmd(ctx context.Context) *exec.Cmd {
 	logrus.Trace("creating manifest-tool version command")
 
 	// variable to store flags for command
@@ -44,5 +45,5 @@ func versionCmd() *exec.Cmd {
 	// add flag to print version of manifest-tool command
 	flags = append(flags, "--version")
 
-	return exec.Command(manifestToolBin, flags...)
+	return exec.CommandContext(ctx, manifestToolBin, flags...)
 }

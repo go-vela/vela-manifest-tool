@@ -4,6 +4,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"os/exec"
@@ -36,7 +37,7 @@ type Plugin struct {
 
 // Formats and outputs the command necessary for manifest-tool to build
 // and publish a Docker Manifest List or OCI Image Index.
-func (p *Plugin) Command(specFile string) *exec.Cmd {
+func (p *Plugin) Command(ctx context.Context, specFile string) *exec.Cmd {
 	logrus.Debug("creating manifest-tool command from plugin configuration")
 
 	// variable to store flags for command
@@ -46,11 +47,11 @@ func (p *Plugin) Command(specFile string) *exec.Cmd {
 		specFile,
 	}
 
-	return exec.Command(manifestToolBin, flags...)
+	return exec.CommandContext(ctx, manifestToolBin, flags...)
 }
 
 // Exec formats and runs the commands for building and publishing a Docker image.
-func (p *Plugin) Exec() error {
+func (p *Plugin) Exec(ctx context.Context) error {
 	logrus.Debug("running plugin with provided configuration")
 
 	if len(p.manifestSpecs) == 0 {
@@ -64,7 +65,7 @@ func (p *Plugin) Exec() error {
 	}
 
 	// output the manifest-tool version for troubleshooting
-	err = execCmd(versionCmd())
+	err = execCmd(versionCmd(ctx))
 	if err != nil {
 		return err
 	}
@@ -101,7 +102,7 @@ func (p *Plugin) Exec() error {
 			return err
 		}
 
-		cmd := p.Command(specFilename)
+		cmd := p.Command(ctx, specFilename)
 		// If a dry run, return without executing the cmd
 		if p.Registry.DryRun {
 			fmt.Println("Not pushing manifest list/image index as dry_run is true")

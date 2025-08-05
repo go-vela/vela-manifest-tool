@@ -10,7 +10,7 @@ import (
 )
 
 func TestVersion(t *testing.T) {
-	cmd := versionCmd()
+	cmd := versionCmd(t.Context())
 	cases := []struct {
 		arg, expected string
 	}{
@@ -44,7 +44,7 @@ func TestExecution(t *testing.T) {
 		var outbuf, errbuf bytes.Buffer
 
 		stdout, stderr = &outbuf, &errbuf
-		cmd := exec.Command(tc.args[0], tc.args[1:]...) //nolint:gosec // we control the test data
+		cmd := exec.CommandContext(t.Context(), tc.args[0], tc.args[1:]...) //nolint:gosec // we control the test data
 
 		err := execCmd(cmd)
 		if err != nil {
